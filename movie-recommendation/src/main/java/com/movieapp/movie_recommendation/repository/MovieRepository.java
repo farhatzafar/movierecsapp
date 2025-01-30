@@ -11,7 +11,7 @@ public interface MovieRepository  extends JpaRepository<Movie, Long> {
     List<Movie> findByGenreAndLeadActorGenderAndReleaseYear(String genre, String leadActorGender, int releaseYear);
 
     // Add the following methods for individual filters
-    List<Movie> findByGenre(String genre);
+    List<Movie> findByGenreIgnoreCase(String genre);
 
     List<Movie> findByReleaseYear(int releaseYear);
 

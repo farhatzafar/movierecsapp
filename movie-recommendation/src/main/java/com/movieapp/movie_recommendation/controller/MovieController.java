@@ -44,7 +44,7 @@ public class MovieController {
 
         // If only genre is provided
         if (genre != null) {
-            return movieRepository.findByGenre(genre);
+            return movieRepository.findByGenreIgnoreCase(genre);
         }
 
         // If only releaseYear is provided
@@ -69,20 +69,20 @@ public class MovieController {
     }
 
     // Method to filter movies by genre
-    @GetMapping("/movies/genre")
-    public List<Movie> getMoviesByGenre(@RequestParam String genre) {
-        return movieRepository.findByGenre(genre);
+    @GetMapping("/movies/genre/{genre}")
+    public List<Movie> getMoviesByGenre(@PathVariable String genre) {
+        return movieRepository.findByGenreIgnoreCase(genre);
     }
 
     // Method to filter movies by release year
-    @GetMapping("/movies/releaseYear")
-    public List<Movie> getMoviesByReleaseYear(@RequestParam Integer releaseYear) {
+    @GetMapping("/movies/releaseYear/{releaseYear}")
+    public List<Movie> getMoviesByReleaseYear(@PathVariable Integer releaseYear) {
         return movieRepository.findByReleaseYear(releaseYear);
     }
 
     // Method to filter movies by lead actor gender
-    @GetMapping("/movies/leadActorGender")
-    public List<Movie> getMoviesByLeadActorGender(@RequestParam String leadActorGender) {
+    @GetMapping("/movies/leadActorGender/{leadActorGender}")
+    public List<Movie> getMoviesByLeadActorGender(@PathVariable String leadActorGender) {
         return movieRepository.findByLeadActorGender(leadActorGender);
     }
 
