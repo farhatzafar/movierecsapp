@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
+import { Card, CardContent, CardMedia, Typography, Paper } from "@mui/material";
 
 type Movie = {
   id: number;
@@ -32,7 +33,7 @@ const App = () => {
         `http://localhost:8080/movies?genre=${genre}&releaseYear=${releaseYear}&leadActorGender=${leadActorGender}`
       );
       setRecommendedMovies(response.data);
-      setShowQuestions(false); // Hide the questions when recommendations are shown
+      setShowQuestions(false);
     } catch (error) {
       console.error("Error fetching movies:", error);
       alert("Something went wrong while fetching recommendations");
@@ -58,47 +59,76 @@ const App = () => {
   return (
     <div className="App">
       <h1>Farhat's Movie Recommendations</h1>
-      
+
       {showQuestions && (
         <div className="filters">
           <div>
             <h2>Which genre of movie do you prefer?</h2>
-            <button onClick={() => handleGenreClick("Drama")}>Drama</button>
-            <button onClick={() => handleGenreClick("Comedy")}>Comedy</button>
-            <button onClick={() => handleGenreClick("Horror")}>Horror</button>
+            {["Drama", "Comedy", "Horror"].map((option) => (
+              <button
+                key={option}
+                onClick={() => handleGenreClick(option)}
+                style={{
+                  backgroundColor: genre === option ? "#ffcc00" : "#fdf0d5",
+                  color: genre === option ? "black" : "black",
+                  border: genre === option ? "2px solid #ff9900" : "1px solid gray",
+                }}
+              >
+                {option}
+              </button>
+            ))}
           </div>
 
           <div>
             <h2>Please pick a release year:</h2>
-            <button onClick={() => handleReleaseYearClick(2020)}>2020</button>
-            <button onClick={() => handleReleaseYearClick(2021)}>2021</button>
-            <button onClick={() => handleReleaseYearClick(2022)}>2022</button>
-            <button onClick={() => handleReleaseYearClick(2023)}>2023</button>
-            <button onClick={() => handleReleaseYearClick(2024)}>2024</button>
+            {[2020, 2021, 2022, 2023, 2024].map((year) => (
+              <button
+                key={year}
+                onClick={() => handleReleaseYearClick(year)}
+                style={{
+                  backgroundColor: releaseYear === year ? "#ffcc00" : "#fdf0d5",
+                  color: releaseYear === year ? "black" : "black",
+                  border: releaseYear === year ? "2px solid #ff9900" : "1px solid gray",
+                }}
+              >
+                {year}
+              </button>
+            ))}
           </div>
 
           <div>
             <h2>Do you prefer movies with a female lead or a male lead?</h2>
-            <button onClick={() => handleLeadActorGenderClick("female")}>Female</button>
-            <button onClick={() => handleLeadActorGenderClick("male")}>Male</button>
+            {["female", "male"].map((option) => (
+              <button
+                key={option}
+                onClick={() => handleLeadActorGenderClick(option)}
+                style={{
+                  backgroundColor: leadActorGender === option ? "#ffcc00" : "#fdf0d5",
+                  color: leadActorGender === option ? "black" : "black",
+                  border: leadActorGender === option ? "2px solid #ff9900" : "1px solid gray",
+                }}
+              >
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
       )}
-      
+
       {showQuestions && (
-        <button style={{ backgroundColor: "#80ed99", color: "black", margin: "1rem" }} onClick={handleRecommendClick}>
-          Recommend me some movies
-        </button>
+        <button className="recbutton" onClick={handleRecommendClick}>
+        Recommend me some movies
+      </button>
       )}
 
       {showQuestions && (
-        <button style={{ backgroundColor: "#4da6ff", color: "white", margin: "1rem" }} onClick={handleViewAllMovies}>
+        <button className="allbutton" onClick={handleViewAllMovies}>
           View All Movies
         </button>
       )}
 
       {!showQuestions && (
-        <button style={{ backgroundColor: "#ff6b6b", color: "white", margin: "1rem" }} onClick={handleGoBack}>
+        <button style={{ backgroundColor: "#ef233c", color: "white", margin: "1rem" }} onClick={handleGoBack}>
           Go Back
         </button>
       )}
@@ -106,20 +136,33 @@ const App = () => {
       <div className="movie-cards">
         {recommendedMovies.length > 0 ? (
           recommendedMovies.map((movie) => (
-            <div key={movie.id} className="movie-card">
-              <img
-                src={movie.posterUrl || "https://via.placeholder.com/150"}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <h3>{movie.title}</h3>
-              <p>Genre: {movie.genre}</p>
-              <p>Release Year: {movie.releaseYear}</p>
-              <p>Lead Actor Gender: {movie.leadActorGender}</p>
-            </div>
+            <Paper key={movie.id} elevation={3} style={{ margin: "1rem", padding: "1rem", maxWidth: "250px" }}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="300"
+                  image={movie.posterUrl || "https://via.placeholder.com/150"}
+                  alt={movie.title}
+                />
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {movie.title}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Genre: {movie.genre}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Release Year: {movie.releaseYear}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Lead Actor Gender: {movie.leadActorGender}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Paper>
           ))
         ) : (
-          <p>No movies to display</p>
+          <p style={{ color: "white" }}>No movies to display</p>
         )}
       </div>
     </div>
