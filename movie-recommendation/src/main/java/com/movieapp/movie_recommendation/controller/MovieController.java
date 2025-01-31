@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173") // Allow requests from your frontend
 public class MovieController {
 
     @Autowired
@@ -22,22 +24,14 @@ public class MovieController {
     @Autowired
     private PreferencesRepository preferencesRepository;
 
-    // Get all movies
+    // Get movies with optional filtering by genre, release year, or lead actor gender
     @GetMapping("/movies")
     public List<Movie> getAllMovies(
-            @RequestParam(required = false) Long movieId,
             @RequestParam(required = false) String genre,
             @RequestParam(required = false) Integer releaseYear,
             @RequestParam(required = false) String leadActorGender) {
 
-        // If a movieId is provided, return that specific movie
-        if (movieId != null) {
-            Movie movie = movieRepository.findByMovieId(movieId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-            return List.of(movie); // Return the movie wrapped in a list
-        }
-
-        // If all filters are provided, use the repository method for filtering
+        // If all filters are provided
         if (genre != null && releaseYear != null && leadActorGender != null) {
             return movieRepository.findByGenreAndLeadActorGenderAndReleaseYear(genre, leadActorGender, releaseYear);
         }
@@ -66,24 +60,6 @@ public class MovieController {
     public Movie getMovieById(@PathVariable Long movieId) {
         return movieRepository.findByMovieId(movieId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-    }
-
-    // Method to filter movies by genre
-    @GetMapping("/movies/genre/{genre}")
-    public List<Movie> getMoviesByGenre(@PathVariable String genre) {
-        return movieRepository.findByGenreIgnoreCase(genre);
-    }
-
-    // Method to filter movies by release year
-    @GetMapping("/movies/releaseYear/{releaseYear}")
-    public List<Movie> getMoviesByReleaseYear(@PathVariable Integer releaseYear) {
-        return movieRepository.findByReleaseYear(releaseYear);
-    }
-
-    // Method to filter movies by lead actor gender
-    @GetMapping("/movies/leadActorGender/{leadActorGender}")
-    public List<Movie> getMoviesByLeadActorGender(@PathVariable String leadActorGender) {
-        return movieRepository.findByLeadActorGender(leadActorGender);
     }
 
     // Method to get recommendations (based on user preferences, as before)

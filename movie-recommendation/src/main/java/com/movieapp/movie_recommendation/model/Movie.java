@@ -15,6 +15,18 @@ public class Movie {
     private int releaseYear;
     private String leadActorGender;
 
+    // New field for poster URL
+    private String posterUrl;
+
+    // Getters and setters for the poster URL
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+    
     // Getters and setters
     public Long getMovieId() {
         return movieId;
