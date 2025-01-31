@@ -8,6 +8,20 @@ CREATE TABLE movies (
 );
 
 
+ CREATE TABLE users (
+     user_id SERIAL PRIMARY KEY,
+     username VARCHAR(255) NOT NULL,
+     email VARCHAR(255) UNIQUE NOT NULL
+ );
+
+ CREATE TABLE preferences (
+     preference_id SERIAL PRIMARY KEY,
+     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+     preferred_genre VARCHAR(50),
+     preferred_release_year INT,
+     preferred_lead_actor_gender VARCHAR(10) CHECK (preferred_lead_actor_gender IN ('male', 'female'))
+ );
+
 INSERT INTO movies (title, genre, release_year, lead_actor_gender, poster_url)
 VALUES
     ('The Invisible Man', 'Horror', 2020, 'female', 'https://image.tmdb.org/t/p/w1280/5EufsDwXdY2CVttYOk2WtYhgKpa.jpg'),
@@ -38,3 +52,5 @@ VALUES
     ('John Wick: Chapter 4', 'Drama', 2024, 'male', 'https://image.tmdb.org/t/p/w1280/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg'),
     ('Exorcist: Believer', 'Horror', 2023, 'female', 'https://image.tmdb.org/t/p/w1280/fFXkAlMH2iQrNknv4eq7LGTkcti.jpg'),
     ('Deadpool 3', 'Comedy', 2024, 'male', 'https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg');
+
+SELECT * FROM MOVIES;
